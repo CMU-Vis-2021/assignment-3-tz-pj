@@ -25,3 +25,4 @@ vegaEmbed("#vega-div", {
     y: { field: "b", type: "quantitative" },
   },
 });
+
