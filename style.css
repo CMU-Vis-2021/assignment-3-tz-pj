@@ -2,13 +2,18 @@ h2 {
   color: red;
 }
 
-    path {
-        stroke: white;
-        stroke-width: 0.5px;
-        fill: black;
-    }
+path {
+  stroke: white;
+  stroke-width: 0.5px;
+  fill: black;
+}
 
 .state {
   stroke-width: 1;
   stroke: #ffffff;
+}
+
+.state:hover {
+  fill: lightblue;
+  cursor: pointer;
 }
