@@ -20,8 +20,21 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
             .attr('class', 'state')
      });
 
+//import the csv data 
+d3.csv("dataset_aggregation.csv", function(data) {
+    console.log(data);
 
-const colorScale = d3.scaleLinear()
+    // checking the min and max of the inventor_percent
+    let max = d3.max(data, function (d, i) {
+        return d.inventor_percent;
+    });
+    let min = d3.min(data, function (d, i) {
+        return d.inventor_percent;
+    });
+    console.log(max);
+    console.log(min);
+
+    const colorScale = d3.scaleLinear()
     .domain([min, max])
     .range(["#00806D", "#00BC4C", "#00F200", "#85FB44"].reverse());
-
+});
