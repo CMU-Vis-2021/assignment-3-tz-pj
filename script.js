@@ -7,6 +7,11 @@ let fetchData = async () => {
         return response.json();
     };
 
+Number.prototype.round = function (decimals) {
+    return Number((Math.round(this + "e" + decimals) + "e-" + decimals));
+    // return Number((Math.round(this + "e" + decimals) + "e-" + decimals));
+};
+
 const width = 900;
 const height = 600;
 const svg = d3.select("body").append("svg")
@@ -49,7 +54,6 @@ const colorScale = d3.scaleLinear()
     .range(["#00806D", "#00BC4C", "#00F200", "#85FB44"].reverse());
     
 
-
     let inventor = data.map(function (d, i) {
         return d.inventor_percent;
     });
@@ -81,18 +85,40 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
         //     return color(d);
         // };
         // .style("fill", function(d, i) {
-        //                         //Get data value
-        //                         var value = idata[d.inventor_percent];
-        //                         if (value) {
-        //                                 //If value exists…
-        //                                 return color(value);
-        //                         } else {
-        //                                 //If value is undefined…
-        //                                 return "#ccc";
-        //                         }
 
-
-
-
-
+        const legend = d3.select("body").append('svg')
+        //add it with the '.legend' class
+            .attr('class', 'legend')
+            //it should be 14px wide
+            .attr('width', 148)
+            //and 148px high
+            .attr('height', 148)
+            //then either select all the 'g's inside the svg
+            //or create placeholders
+            .selectAll('g')
+            //Fill the data into our placeholders in reverse order
+            //This arranges our legend in descending order.
+            //The 'data' here is the items we entered in the 'domain',
+            //in this case [min, max]
+            //We use 'slice()' to create a shallow copy of the array
+            //Since we don't want to modify the original one
+            .data(colorScale.domain().slice().reverse())
+            //Every node in teh data should have a 'g' appended
+            .enter().append('g')
+            //the 'g' should have this attribute
+            .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+        //Inside every 'legend', insert a rect
+        legend.append("rect")
+            //that's 18px wide
+            .attr("width", 18)
+            //and 18px high
+            .attr("height", 18)
+            //then fill it will the color assigned by the scale
+            .style("fill", colorScale);
+        legend.append("text")
+            .attr("x", 24)
+            .attr("y", 9)
+            .attr("dy", ".35em")
+            // .text(function(d) { return `${(d*100).round(2).toFixed(1)}%`});
+            .text(function(d) { return `${(d).round(3).toFixed(3)}%`})
 });
