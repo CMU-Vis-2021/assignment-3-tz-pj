@@ -24,6 +24,10 @@ const projection = d3.geoAlbersUsa()
  
 const path = d3.geoPath().projection(projection);
 
+const tooltip = d3.select("body").append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0);
+
 //import the csv data 
 
 const idata = d3.csv("data_aggregation.csv");
@@ -91,7 +95,7 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
 
             tooltip.style("left", (d3.event.pageX) + "px")
                 .style("top", (d3.event.pageY) + "px")
-                .text(()=> `${d.State}: ${(d.inventor_percent*100).round(2).toFixed(1)}%`)
+                .text(()=> `${d.state}: ${(d.inventor_percent)}%`)
         })
         .on("mouseover", function (d) {
             d3.select(this)
@@ -183,9 +187,7 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
             .attr("y", 9)
             .attr("dy", ".35em")
             // .text(function(d) { return `${(d*100).round(2).toFixed(1)}%`});
-            .text(function(d) { return `${(d).round(3).toFixed(3)}%`})
-
-            
+            .text(function(d) { return `${(d).round(3).toFixed(3)}%`})    
 });
 
 });
