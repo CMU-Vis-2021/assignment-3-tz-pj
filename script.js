@@ -42,6 +42,7 @@ d3.csv("data_aggregation.csv", function(data) {
     console.log(min);
 
 
+
 var color = d3.scaleQuantize()
      .domain([min, max])
      //.range(d3.schemePurples[5]);
@@ -72,20 +73,82 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
         .enter()
         .append('path')
         .attr("d", path)
+         .style('transition', "all 0.2s ease-in-out")
+
         .attr('class', 'state')
         // .style("fill", d => color(idata.get(d.inventor_percent)))
         .style("fill", function(d) { 
-            return colorScale(d.inventor_percent) 
+            return colorScale(d.inventor_percent);
+        })
+        
+
+        //adding hover interactions
+    
+        .on('mousemove', function (d) {
+            tooltip.transition()
+                .duration(200)
+                .style("opacity", .9);
+
+            tooltip.style("left", (d3.event.pageX) + "px")
+                .style("top", (d3.event.pageY) + "px")
+                .text(()=> `${d.State}: ${(d.inventor_percent*100).round(2).toFixed(1)}%`)
+        })
+        .on("mouseover", function (d) {
+            d3.select(this)
+                .style("fill", tinycolor(colorScale(d.inventor_percent)).darken(15).toString())
+                .style("cursor", "pointer");
+
+        })
+        .on("mouseout", function (d, i) {
+            d3.select(this).style("fill", function (d) {
+                return colorScale(d.inventor_percent);
+            });
+
+            tooltip.transition()
+                .duration(500)
+                .style("opacity", 0);
         });
+        
+    
+        
         // .style('fill', function (d, i) {
         // let inventor = d.inventor_percent;
         // return inventor ? colorScale(inventor) : "#ccc";
-    })
+    // })
+
         // .style("fill", function(d){
         //     return color(d);
         // };
         // .style("fill", function(d, i) {
 
+
+            // let sampleMap = response.data.map(item => {
+            //         return Number(item.inventor_percent);
+            //     });
+            //     let domain = selectDivisionNumber(sampleMap).sort();
+
+
+            // function selectDivisionNumber(array) {
+            //         let arraySize = array.length,
+            //             halfArray = Math.round(arraySize / 2);
+            //         let newArr = [];
+            //         //Take first and last item and push them to the array
+            //         newArr.push(array[0])
+            //         newArr.push(array[arraySize - 1]);
+            //         //Don't mind the order, they will be sorted later.
+            //         //Divide the array in two
+            //         let firstHalf = array.slice(0, halfArray);
+            //         let firstHalfSelection = firstHalf[Math.round(firstHalf.length / 2)];
+            //         newArr.push(firstHalfSelection);
+                
+            //         let secondHalf = array.slice(halfArray, arraySize);
+            //         let secondHalfSelection = secondHalf[Math.round(secondHalf.length / 2)];
+            //         newArr.push(secondHalfSelection);
+            //         return newArr;
+            //     }
+
+
+        // adding legend
         const legend = d3.select("body").append('svg')
         //add it with the '.legend' class
             .attr('class', 'legend')
@@ -121,4 +184,13 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
             .attr("dy", ".35em")
             // .text(function(d) { return `${(d*100).round(2).toFixed(1)}%`});
             .text(function(d) { return `${(d).round(3).toFixed(3)}%`})
+
+            
 });
+
+});
+
+
+
+
+  
