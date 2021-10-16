@@ -12,8 +12,6 @@ Number.prototype.round = function (decimals) {
     // return Number((Math.round(this + "e" + decimals) + "e-" + decimals));
 };
 
-
-
 const width = 900;
 const height = 600;
 const svg = d3.select("body").append("svg")
@@ -24,46 +22,48 @@ const projection = d3.geoAlbersUsa()
         .translate([width / 2, height / 2]) // translate to center of screen
         .scale([1000]); // scale things down so see entire US
  
-
 const path = d3.geoPath().projection(projection);
 
 //import the csv data 
 const idata = d3.csv("data_aggregation.csv");
 
-//  fetchData().then(response => {
 //create tooltip
 const tooltip = d3.select("body").append("div")
             .attr("class", "tooltip")
             .style("opacity", 0);
 
-// let sampleMap = d3.map(item => {
-//     return Number(item.inventor_percent);
-// });
-// let domain = selectDivisionNumber(sampleMap).sort();
-
-
 d3.csv("data_aggregation.csv", function(data) {
-    console.log(data);
+    //console.log(data);
 
     var gender = document.getElementById("gender-select");
-    var percent;
-if(gender.option.value ="female"){
-    percent = inventor_percent_f;
-}
-if(gender.option.value="male"){
-    percent = inventor_percent_m;
-}
-if(gender.option.value="all"){
-    percent = inventor_percent;
-}
+    var genderValue = gender.value;
+    //console.log(genderValue)
 
-d3.select("#gender-select")
-          .selectAll("option")
-        //   .data(dropdown_options)
-          .enter()
-          .append("option")
-          .attr("value", function(option) { return option.value; })
-          .text(function(option) { return option.text; });
+    // get the gender dropdown value and update the percent
+    let inventorPercent = data.map(function (d, i) {
+        if(genderValue == "female"){
+            return d.inventor_percent_f;
+        }
+        else if(genderValue == "male"){
+            return d.inventor_percent_m;
+        }
+        else if (genderValue == "all"){
+            return d.inventor_percent;
+        }
+        else {
+            return d.inventor_percent;
+        }
+    });
+    console.log(genderValue +': ' +inventorPercent)
+
+
+// d3.select("#gender-select")
+//           .selectAll("option")
+//         //   .data(dropdown_options)
+//           .enter()
+//           .append("option")
+//           .attr("value", function(option) { return option.value; })
+//           .text(function(option) { return option.text; });
 
     // checking the min and max of the inventor_percent
     let max = d3.max(data, function (d, i) {
@@ -73,24 +73,15 @@ d3.select("#gender-select")
         return d.inventor_percent;
     });
 
+    //set colors 
     lowColor = '#EBF5FB';
     highColor = '#2874A6';
+
     var ramp = d3.scaleLinear()
         .domain([min,max])
         .range([lowColor,highColor]);
     //console.log(max);
     //console.log(min);
-
-// var color = d3.scaleQuantize()
-//      .domain([min, max])
-//      //.range(d3.schemePurples[5]);
-//       .range(["rgb(213,222,217)","rgb(69,173,168)","rgb(84,36,55)","rgb(217,91,67)"]);
-
-// const colorScale = d3.scaleLinear()
-//     .domain([min, max])
-//     // .range(["#00806D", "#00BC4C", "#00F200", "#85FB44"].reverse());
-//     .range(d3.schemePurples[3]);
-    
 
     let inventor = data.map(function (d, i) {
         return d.inventor_percent;
@@ -118,7 +109,6 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
             return ramp(d.inventor_percent);
         })
         
-
         //adding hover interactions
         .on('mousemove', function (d) {
             tooltip.transition()
@@ -144,43 +134,10 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
                 .duration(500)
                 .style("opacity", 0);
         });
-        
-        // // adding legend
-        // const legend = d3.select("body").append('svg')
-        // //add it with the '.legend' class
-        //     .attr('class', 'legend')
-        //     .attr('width', 148)
-        //     .attr('height', 148)
-        //     //then either select all the 'g's inside the svg
-        //     //or create placeholders
-        //     .selectAll('g')
-        //     //Fill the data into our placeholders in reverse order
-        //     //This arranges our legend in descending order.
-        //     //The 'data' here is the items we entered in the 'domain',
-        //     //in this case [min, max]
-        //     //We use 'slice()' to create a shallow copy of the array
-        //     //Since we don't want to modify the original one
-        //     .data(ramp.domain().slice().reverse())
-        //     //Every node in teh data should have a 'g' appended
-        //     .enter().append('g')
-        //     //the 'g' should have this attribute
-        //     .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
-        // //Inside every 'legend', insert a rect
-        // legend.append("rect")
-        //     .attr("width", 18)
-        //     .attr("height", 18)
-        //     //then fill it will the color assigned by the scale
-        //     .style("fill", ramp);
-        // legend.append("text")
-        //     .attr("x", 24)
-        //     .attr("y", 9)
-        //     .attr("dy", ".35em")
-        //     .text(function(d) {return `${(d).round(3).toFixed(3)}%`})    
 
-        var dropDown = d3.select("#gender-select");
+        // var dropDown = d3.select("#gender-select");
 
-        dropDown.on("change", function() {
-
+        // dropDown.on("change", function() {
             var w = 140, h = 300;
             var key = d3.select("body")
                 .append("svg")
@@ -223,6 +180,7 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
                 .attr("class", "y axis")
                 .attr("transform", "translate(41,10)")
                 .call(yAxis)
-});
 
+            });
+        //});
 });

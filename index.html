@@ -24,19 +24,18 @@
     <h2>Who Becomes an Inventor?</h2>
     <p>Origins of Inventors <br> Innovation Rates by Childhood CZ/State, Gender, and Parent Income</p>
 
-    <label for="pet-select">Gender</label><br>
+    <label for="select">Gender</label><br>
     <select name="gender" id="gender-select">
-        <option value="">--Please choose an option--</option>
-        <option value="inventor_percent">All</option>
-        <option value="inventor_percent_f">Female</option>
-        <option value="inventor_percent_m">Male</option>
+        <option value="all" selected>All</option>
+        <option value="female">Female</option>
+        <option value="male">Male</option>
     </select>
     <br><br><br>
-    <div>
+    <!-- <div>
         <p>Select Parent Income Quantile:</p>
         <input type="range" min="1" max="100" value="50" class="slider" id="Range">
-    </div>
-    <br><br>
+    </div> 
+    <br><br> -->
     <div id="vis"></div>
     <script src="script.js"></script>
 
