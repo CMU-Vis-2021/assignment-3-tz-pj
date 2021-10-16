@@ -17,10 +17,6 @@ path {
   fill: lightblue;
   cursor: pointer;
 }
-/*
-.slidecontainer {
-  width: 50px;
-}*/
 
 .slider {
   -webkit-appearance: none;
@@ -53,17 +49,13 @@ path {
   cursor: pointer;
 
 }
-/* body {
-  display: flex;
-  justify-content: left;
-  align-items: left;
-  height: 200vh;
-  flex-direction: column;
-} */
-/* .state {
-  stroke-width: 1;
-  stroke: #ffffff;
-} */
+body {
+  font: sans-serif;
+  /* display: flex; */
+  /* justify-content: left; */
+  /* align-items: left; */
+  /* flex-direction: column; */
+}
 
 div.tooltip {
   position: absolute;
@@ -79,9 +71,9 @@ div.tooltip {
 }
 
 .legend {
-	position:relative;
-	left:20px;
-	top:30px;
+	padding-top: 100px;
+  padding-left: 50px;
+  float: left;
 }
 
 .axis text {
