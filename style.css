@@ -67,13 +67,29 @@ path {
 
 div.tooltip {
   position: absolute;
-  text-align: center;
-  width: 60px;
-  min-height: 28px;
+  text-align: left;
+  width: 120px;
+  min-height: 35px;
   padding: 8px 12px;
   font: 12px sans-serif;
-  background: lightgray;
+  background:white;
   border: 0px;
-  border-radius: 8px;
+  border-radius: 5px;
   pointer-events: none;
+}
+
+.legend {
+	position:relative;
+	left:20px;
+	top:30px;
+}
+
+.axis text {
+	font: 10px sans-serif;
+}
+
+.axis line, .axis path {
+	fill: none;
+	stroke: #000;
+	shape-rendering: crispEdges;
 }
