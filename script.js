@@ -12,24 +12,7 @@ Number.prototype.round = function (decimals) {
     // return Number((Math.round(this + "e" + decimals) + "e-" + decimals));
 };
 
-// function selectDivisionNumber(array) {
-//     let arraySize = array.length,
-//         halfArray = Math.round(arraySize / 2);
-//     let newArr = [];
-//     //Take first and last item and push them to the array
-//     newArr.push(array[0])
-//     newArr.push(array[arraySize - 1]);
-//     //Don't mind the order, they will be sorted later.
-//     //Divide the array in two
-//     let firstHalf = array.slice(0, halfArray);
-//     let firstHalfSelection = firstHalf[Math.round(firstHalf.length / 2)];
-//     newArr.push(firstHalfSelection);
- 
-//     let secondHalf = array.slice(halfArray, arraySize);
-//     let secondHalfSelection = secondHalf[Math.round(secondHalf.length / 2)];
-//     newArr.push(secondHalfSelection);
-//     return newArr;
-// }
+
 
 const width = 900;
 const height = 600;
@@ -61,6 +44,26 @@ const tooltip = d3.select("body").append("div")
 
 d3.csv("data_aggregation.csv", function(data) {
     console.log(data);
+
+    var gender = document.getElementById("gender-select");
+    var percent;
+if(gender.option.value ="female"){
+    percent = inventor_percent_f;
+}
+if(gender.option.value="male"){
+    percent = inventor_percent_m;
+}
+if(gender.option.value="all"){
+    percent = inventor_percent;
+}
+
+d3.select("#gender-select")
+          .selectAll("option")
+        //   .data(dropdown_options)
+          .enter()
+          .append("option")
+          .attr("value", function(option) { return option.value; })
+          .text(function(option) { return option.text; });
 
     // checking the min and max of the inventor_percent
     let max = d3.max(data, function (d, i) {
@@ -173,6 +176,10 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
         //     .attr("y", 9)
         //     .attr("dy", ".35em")
         //     .text(function(d) {return `${(d).round(3).toFixed(3)}%`})    
+
+        var dropDown = d3.select("#gender-select");
+
+        dropDown.on("change", function() {
 
             var w = 140, h = 300;
             var key = d3.select("body")
