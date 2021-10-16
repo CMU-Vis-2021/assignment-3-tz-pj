@@ -108,6 +108,11 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
         .style("fill", function(d) { 
             return ramp(d.inventor_percent);
         })
+
+        // .append("text")
+        // .attr("text-anchor", "middle")  
+        // .style("font-size", "20px") 
+        // .text("US Innovation Rates by Childhood State and Gender");
         
         //adding hover interactions
         .on('mousemove', function (d) {

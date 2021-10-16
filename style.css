@@ -47,14 +47,30 @@ path {
   height: 20px;
   background: #04AA6D;
   cursor: pointer;
-
 }
+
 body {
-  font: sans-serif;
+  font-family: Arial, sans-serif;
+  padding: 20px;
   /* display: flex; */
   /* justify-content: left; */
   /* align-items: left; */
   /* flex-direction: column; */
+}
+
+p{
+  color: #777777;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+h4{
+  font-weight: 600;
+}
+
+h5{
+  font-weight: 400;
 }
 
 div.tooltip {
@@ -72,7 +88,7 @@ div.tooltip {
 
 .legend {
 	padding-top: 100px;
-  padding-left: 50px;
+  padding-left: 10px;
   float: left;
 }
 
