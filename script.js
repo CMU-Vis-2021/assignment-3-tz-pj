@@ -37,24 +37,25 @@ d3.csv("data_aggregation.csv", function(data) {
 
     var gender = document.getElementById("gender-select");
     var genderValue = gender.value;
+    var percent = 'inventor_percent'
     //console.log(genderValue)
 
     // get the gender dropdown value and update the percent
     let inventorPercent = data.map(function (d, i) {
         if(genderValue == "female"){
-            return d.inventor_percent_f;
+            percent = 'inventor_percent_f';
         }
         else if(genderValue == "male"){
-            return d.inventor_percent_m;
+            percent = 'inventor_percent_m';
         }
         else if (genderValue == "all"){
-            return d.inventor_percent;
+            percent = 'inventor_percent';
         }
         else {
-            return d.inventor_percent;
+            percent = 'inventor_percent';
         }
     });
-    console.log(genderValue +': ' +inventorPercent)
+    console.log(genderValue +': ' +inventorPercent);
 
 
 // d3.select("#gender-select")
@@ -67,10 +68,10 @@ d3.csv("data_aggregation.csv", function(data) {
 
     // checking the min and max of the inventor_percent
     let max = d3.max(data, function (d, i) {
-        return d.inventor_percent;
+        return d[percent];
     });
     let min = d3.min(data, function (d, i) {
-        return d.inventor_percent;
+        return d[percent];
     });
 
     //set colors 
@@ -84,7 +85,7 @@ d3.csv("data_aggregation.csv", function(data) {
     //console.log(min);
 
     let inventor = data.map(function (d, i) {
-        return d.inventor_percent;
+        return d[percent];
     });
     console.log(inventor);
  
@@ -106,7 +107,7 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
         .attr('class', 'state')
         // .style("fill", d => color(idata.get(d.inventor_percent)))
         .style("fill", function(d) { 
-            return ramp(d.inventor_percent);
+            return ramp(d[percent]);
         })
 
         // .append("text")
@@ -122,17 +123,17 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
 
             tooltip.style("left", (d3.event.pageX) + "px")
                 .style("top", (d3.event.pageY) + "px")
-                .text(()=> `${d.state}: ${(d.inventor_percent)}%; \n\n Total: ${(d.inventor_count)}`)
+                .text(()=> `${d.state}: ${(d[percent])}%; \n\n Total: ${(d.inventor_count)}`)
         })
         .on("mouseover", function (d) {
             d3.select(this)
-                .style("fill", tinycolor(ramp(d.inventor_percent)).darken(15).toString())
+                .style("fill", tinycolor(ramp(d[percent])).darken(15).toString())
                 .style("cursor", "pointer");
 
         })
         .on("mouseout", function (d, i) {
             d3.select(this).style("fill", function (d) {
-                return ramp(d.inventor_percent);
+                return ramp(d[percent]);
             });
 
             tooltip.transition()
