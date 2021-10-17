@@ -51,7 +51,7 @@ path {
 
 body {
   font-family: Arial, sans-serif;
-  padding: 20px;
+  padding: 10px;
   /* display: flex; */
   /* justify-content: left; */
   /* align-items: left; */
@@ -77,7 +77,7 @@ div.tooltip {
   position: absolute;
   text-align: left;
   width: 120px;
-  min-height: 35px;
+  min-height: 30px;
   padding: 8px 12px;
   font: 12px sans-serif;
   background:white;

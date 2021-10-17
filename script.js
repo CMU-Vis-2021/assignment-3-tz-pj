@@ -12,8 +12,8 @@ Number.prototype.round = function (decimals) {
     // return Number((Math.round(this + "e" + decimals) + "e-" + decimals));
 };
 
-const width = 900;
-const height = 600;
+const width = 800;
+const height = 500;
 const svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height)
@@ -33,31 +33,34 @@ const idata = d3.csv("data_aggregation.csv");
 const tooltip = d3.select("body").append("div")
             .attr("class", "tooltip")
             .style("opacity", 0);
+        
+
 
 d3.csv("data_aggregation.csv", function(data) {
     //console.log(data);
 
-    var gender = document.getElementById("gender-select");
-    var genderValue = gender.value;
+    // var gender = document.getElementById("gender-select");
+    // var genderValue = gender.value;
     var percent = 'inventor_percent'
-    //console.log(genderValue)
+    // console.log(genderValue)
 
-    // get the gender dropdown value and update the percent
-    let inventorPercent = data.map(function (d, i) {
-        if(genderValue == "female"){
-            percent = 'inventor_percent_f';
-        }
-        else if(genderValue == "male"){
-            percent = 'inventor_percent_m';
-        }
-        else if (genderValue == "all"){
-            percent = 'inventor_percent';
-        }
-        else {
-            percent = 'inventor_percent';
-        }
-    });
-    console.log(genderValue +': ' +inventorPercent);
+// get the gender dropdown value and update the percent
+//     let inventorPercent = data.map(function (d, i) {
+//         if(genderValue == "female"){
+//             return d.inventor_percent_f;
+//         }
+//         else if(genderValue == "male"){
+//             return d.inventor_percent_m;
+//         }
+//         else if (genderValue == "all"){
+//             return d.inventor_percent;
+//         }
+//         else {
+//             percent = 'inventor_percent';
+//         }
+//     });
+// }
+//     console.log(genderValue +': ' +inventorPercent);
 
 
 // d3.select("#gender-select")
@@ -75,6 +78,26 @@ d3.csv("data_aggregation.csv", function(data) {
     let min = d3.min(data, function (d, i) {
         return d[percent];
     });
+
+//     var pie_m = d3.pie().value(function(d, i) { 
+//         return d.inventor_percent_m; 
+//     });
+
+//     var pie_f = d3.pie().value(function(d, i) { 
+//         return d.inventor_percent_f; 
+//     });
+//     var arc = d3.selectAll("#vis")
+//            .data(pie_m(data))
+//            .data(pie_f(data))
+//            .enter();
+
+//    var path = d3.arc()
+//        .outerRadius(200)
+//        .innerRadius(0);
+
+//     arc.append("path")
+//        .attr("d", path)
+//         .attr("fill", function(d) { return ramp(d.data.name); });
 
     //set colors 
     lowColor = '#EBF5FB';
@@ -123,14 +146,17 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
                 .duration(200)
                 .style("opacity", .9);
 
+
             tooltip.style("left", (d3.event.pageX) + "px")
                 .style("top", (d3.event.pageY) + "px")
                 .text(()=> `${d.state}: ${(d[percent])}%; \n\n Total: ${(d.inventor_count)}`)
+                
         })
         .on("mouseover", function (d) {
             d3.select(this)
                 .style("fill", tinycolor(ramp(d[percent])).darken(15).toString())
-                .style("cursor", "pointer");
+                .style("cursor", "pointer")
+                displayGender(d);
 
         })
         .on("mouseout", function (d, i) {
@@ -140,7 +166,9 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
 
             tooltip.transition()
                 .duration(500)
-                .style("opacity", 0);
+                .style("opacity", 0)
+
+            hideGender;
         });
 
         // var dropDown = d3.select("#gender-select");
@@ -218,7 +246,18 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
                 var newData = eval(d3.select(this).property('value'));
                 updateLegend(newData);
                 });
+            
+            function displayGender(d){
+                d3.select("#title")
+                .text('Inventor Gender Distribution in ' + `${(d.state)}` + '\n')
 
+                d3.select("#gender")
+                .text(()=> `Male: ${(d.inventor_percent_m)}%; \n\n Female: ${(d.inventor_percent_f)}%`)
+            }
 
-        
+            function hideGender(d){
+                d3.select("#gender")
+                  .text("\u00A0");
+            }
+
 });
