@@ -16,7 +16,9 @@ const width = 900;
 const height = 600;
 const svg = d3.select("body").append("svg")
     .attr("width", width)
-    .attr("height", height);
+    .attr("height", height)
+    .append('g');
+
  
 const projection = d3.geoAlbersUsa()
         .translate([width / 2, height / 2]) // translate to center of screen
@@ -188,5 +190,35 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
                 .call(yAxis)
 
             });
-        //});
+
+
+            function updateLegend(newData) {
+
+                // bind data
+                var appending = svg.selectAll('rect')
+                   .data(newData);
+            
+                // add new elements
+                appending.enter().append('rect');
+            
+                // update both new and existing elements
+                appending.transition()
+                    .duration(0)
+                    .attr("width",function (d) {return d.y; });
+            
+                // remove old elements
+                appending.exit().remove();
+            
+            }
+
+            updateLegend(inventor);
+
+            d3.select('#gender-select')
+                .on('change', function() {
+                var newData = eval(d3.select(this).property('value'));
+                updateLegend(newData);
+                });
+
+
+        
 });
