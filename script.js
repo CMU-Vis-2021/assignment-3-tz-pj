@@ -36,38 +36,8 @@ const tooltip = d3.select("body").append("div")
 
 
 d3.csv("data_aggregation.csv", function(data) {
-
-    // var gender = document.getElementById("gender-select");
-    // var genderValue = gender.value;
     var percent = 'inventor_percent'
     // console.log(genderValue)
-
-// get the gender dropdown value and update the percent
-//     let inventorPercent = data.map(function (d, i) {
-//         if(genderValue == "female"){
-//             return d.inventor_percent_f;
-//         }
-//         else if(genderValue == "male"){
-//             return d.inventor_percent_m;
-//         }
-//         else if (genderValue == "all"){
-//             return d.inventor_percent;
-//         }
-//         else {
-//             percent = 'inventor_percent';
-//         }
-//     });
-// }
-//     console.log(genderValue +': ' +inventorPercent);
-
-
-// d3.select("#gender-select")
-//           .selectAll("option")
-//         //   .data(dropdown_options)
-//           .enter()
-//           .append("option")
-//           .attr("value", function(option) { return option.value; })
-//           .text(function(option) { return option.text; });
 
     // checking the min and max of the inventor_percent
     let max = d3.max(data, function (d, i) {
@@ -76,26 +46,6 @@ d3.csv("data_aggregation.csv", function(data) {
     let min = d3.min(data, function (d, i) {
         return d[percent];
     });
-
-//     var pie_m = d3.pie().value(function(d, i) { 
-//         return d.inventor_percent_m; 
-//     });
-
-//     var pie_f = d3.pie().value(function(d, i) { 
-//         return d.inventor_percent_f; 
-//     });
-//     var arc = d3.selectAll("#vis")
-//            .data(pie_m(data))
-//            .data(pie_f(data))
-//            .enter();
-
-//    var path = d3.arc()
-//        .outerRadius(200)
-//        .innerRadius(0);
-
-//     arc.append("path")
-//        .attr("d", path)
-//         .attr("fill", function(d) { return ramp(d.data.name); });
 
     //set colors 
     lowColor = '#EBF5FB';
@@ -149,7 +99,7 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
                 .style("fill", tinycolor(ramp(d[percent])).darken(25).toString())
                 .style("cursor", "pointer")
                 displayGender(d);
-                //drawChart(d);
+                drawChart(d);
 
         })
         .on("mouseout", function (d, i) {
@@ -230,34 +180,6 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
                 .attr("transform", "translate(41,10)")
                 .call(yAxis)
             });
-
-
-            // function updateLegend(newData) {
-
-            //     // bind data
-            //     var appending = svg.selectAll('rect')
-            //        .data(newData);
-            
-            //     // add new elements
-            //     appending.enter().append('rect');
-            
-            //     // update both new and existing elements
-            //     appending.transition()
-            //         .duration(0)
-            //         .attr("width",function (d) {return d.y; });
-            
-            //     // remove old elements
-            //     appending.exit().remove();
-            
-            // }
-
-            // updateLegend(inventor);
-
-            // d3.select('#gender-select')
-            //     .on('change', function() {
-            //     var newData = eval(d3.select(this).property('value'));
-            //     updateLegend(newData);
-            //     });
             
             function displayGender(d){
                 d3.select("#title")
@@ -272,94 +194,97 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
                 .style("opacity", 1)
                 .text(()=> `Male: ${(d.inventor_percent_m)}%; \n\n Female: ${(d.inventor_percent_f)}%`)
             }
-
-            // function hideGender(d){
-            //     // d3.select("#gender")
-            //     //   .text("\u00A0");
-            //     d3.select("#gender")
-            //       .transition()
-            //       .duration(200)
-            //       .style("opacity", 0)
-            //     d3.select("#title")
-            //       .transition()
-            //       .duration(200)
-            //       .style("opacity", 0)
-            // }
             
             let gd = data.map(function (d, i) {
-                return [{'value': d.state, 'male' : d.inventor_percent_m, 'female' : d.inventor_percent_f}];
+                //return [{'value': d.state, 'male' : d.inventor_percent_m, 'female' : d.inventor_percent_f}];
+                return [{'tag': 'Male', 'value' : d.inventor_percent_m}, {'tag':'Female', 'value' : d.inventor_percent_f}];
             });
             console.log(gd);
             
+            var margin = {
+                top: 15,
+                right: 25,
+                bottom: 15,
+                left: 60
+            };
+    
+            var chartWidth = 900 - margin.left - margin.right,
+                chartHeight = 300 - margin.top - margin.bottom;
 
+            
+            //draw bar chart for gender distribution
             function drawChart(d){
                 var graph = d3.select("#pieChart")
                     .append("svg")
-                    .attr("width", 300)
-                    .attr("height", 200)
+                    .attr("width", chartWidth + margin.left + margin.right)
+                    .attr("height", chartHeight + margin.top + margin.bottom)
                     .append("g")
-                    .attr("transform",
-                        "translate(" + 60 + "," + 30 + ")");
-                var mi = data.map(function(d,i){
-                    if (d.state == d.value) {
-                    return d.inventor_percent_m
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                
+                    //X axis adn Y axis
+                    var graphx = d3.scaleLinear()
+                        .range([0, chartWidth])
+                        .domain([0, d3.max(gd, function (d) {
+                            return d['value'];
+                        })]);
+                    // var graphx = d3.scaleBand()
+                    //     .domain(d3.range(gd.length))
+                    //     .rangeRound([0, chartWidth], 0.05)
+                    //     .paddingInner(0.05);
+                    var graphy = d3.scaleOrdinal()
+                        //.rangeRoundBands([chartHeight, 0], .1)
+                        .range([0, chartHeight])
+                        //.padding(0.1)
+                        .domain(gd.map(function (d) {
+                            return d['tag'];
+                        }));
+
+                    // var graphy =  d3.scaleBand()
+                    //     .domain(d3.range(gd.length))
+                    //     .rangeRound([0, chartWidth], 0.05)
+                    //     .paddingInner(0.05);
+
+                    //make y axis to show bar names
+                    var yAxis = d3.axisLeft(graphy)
+                        .scale(graphy)
+                        //no tick marks
+                        .tickSize(0)
+                        //.orient("left");
+
+                    var gy = graph.append("g")
+                        .attr("class", "y axis")
+                        .call(yAxis)
+
+                    var bars = graph.selectAll(".bar")
+                        .data(gd)
+                        .enter()
+                        .append("g")
+
+                    //append rects
+                    bars.append("rect")
+                    .attr("class", "bar")
+                    .attr("y", function (d) {
+                        return graphy(d['tag']);
+                    })
+                    //.attr("height", graphy.rangeBand())
+                    .attr("height", graphy.bandwidth())
+                    .attr("x", 0)
+                    .attr("width", function (d) {
+                        return graphx(d['value']);
+                    });
+
+                    bars.append("text")
+                        .attr("class", "label")
+                        //y position of the label is halfway down the bar
+                        .attr("y", function (d) {
+                            return graphy(d['tag']) + graphy.bandwidth() / 2 + 4;
+                        })
+                        //x position is 3 pixels to the right of the bar
+                        .attr("x", function (d) {
+                            return graphx(d['value']) + 3;
+                        })
+                        .text(function (d) {
+                            return d['value'];
+                        });
                 }
-                })
-                var fi = data.map(function(d,i){
-                    if (d.state == d.value){
-                    return d.inventor_percent_f
-                    }
-                })
-
-                var newData = [mi,fi];
-                    // X axis
-                    var x = d3.scaleBand()
-                    .range([ 0, 300])
-                    .domain(data.map(function(d) { return d.value; }))
-                    .padding(0.2);
-                    graph.append("g")
-                    .attr("transform", "translate(0," + 200 + ")")
-                    .call(d3.axisBottom(x))
-                    .selectAll("text")
-                    .attr("transform", "translate(-10,0)rotate(-45)")
-                    .style("text-anchor", "end");
-
-                    // Add Y axis
-                    var y = d3.scaleLinear()
-                    .domain([0, 13000])
-                    .range([ 200, 0]);
-                    graph.append("g")
-                    .call(d3.axisLeft(y));
-
-                    // Bars
-                    graph.selectAll("mybar")
-                    .data(newData)
-                    .enter()
-                    .append("rect")
-                    .attr("x", function(d) {return x(d.state); })
-                    .attr("y", function(d) {return y(d.inventor_percent_m);})
-                    .attr("y2", function(d) {return y(d.inventor_percent_f);})
-                    .attr("width", x.bandwidth())
-                    .attr("height", function(d) { return 200 - y(d.inventor_percent_f); })
-                    .attr("fill", "#69b3a2")
-
-                    }
-                                    
-                    // var bar = graph.selectAll("g") 
-                    // .data(gd)
-                    // .enter()
-                    // .append("g")
-                    
-                    // bar.append("rect")
-                    //     .attr("width", function(d) {
-                    //         return d.value * 20;
-                    // })
-                    // .attr("height", 20 - 1);
-
-                    // bar.append("text")
-                    //     .attr("x", function(d) { return (d.value*20); })
-                    //     .attr("y", 20 / 2)
-                    //     //.attr("dy", ".35em")
-                    //     .text(function(d) { return d.key;});
- //           }
 });
