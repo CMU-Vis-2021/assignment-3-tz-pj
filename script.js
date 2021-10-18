@@ -197,7 +197,8 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
             
             let gd = data.map(function (d, i) {
                 //return [{'value': d.state, 'male' : d.inventor_percent_m, 'female' : d.inventor_percent_f}];
-                return [{'tag': 'Male', 'value' : d.inventor_percent_m}, {'tag':'Female', 'value' : d.inventor_percent_f}];
+                var info =[{'tag': 'Male', 'value' : d.inventor_percent_m}, {'tag':'Female', 'value' : d.inventor_percent_f}];
+                return info;
             });
             console.log(gd);
             
@@ -211,27 +212,22 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
             var chartWidth = 900 - margin.left - margin.right,
                 chartHeight = 300 - margin.top - margin.bottom;
 
-            
-            //draw bar chart for gender distribution
-            function drawChart(d){
                 var graph = d3.select("#pieChart")
-                    .append("svg")
-                    .attr("width", chartWidth + margin.left + margin.right)
-                    .attr("height", chartHeight + margin.top + margin.bottom)
-                    .append("g")
-                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-                
-                    //X axis adn Y axis
-                    var graphx = d3.scaleLinear()
+                .append("svg")
+                .attr("width", chartWidth + margin.left + margin.right)
+                .attr("height", chartHeight + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+                var graphx = d3.scaleLinear()
                         .range([0, chartWidth])
                         .domain([0, d3.max(gd, function (d) {
                             return d['value'];
+                            console.log(d['value']);
+
                         })]);
-                    // var graphx = d3.scaleBand()
-                    //     .domain(d3.range(gd.length))
-                    //     .rangeRound([0, chartWidth], 0.05)
-                    //     .paddingInner(0.05);
-                    var graphy = d3.scaleOrdinal()
+
+                        var graphy = d3.scaleOrdinal()
                         //.rangeRoundBands([chartHeight, 0], .1)
                         .range([0, chartHeight])
                         //.padding(0.1)
@@ -239,13 +235,7 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
                             return d['tag'];
                         }));
 
-                    // var graphy =  d3.scaleBand()
-                    //     .domain(d3.range(gd.length))
-                    //     .rangeRound([0, chartWidth], 0.05)
-                    //     .paddingInner(0.05);
-
-                    //make y axis to show bar names
-                    var yAxis = d3.axisLeft(graphy)
+                        var yAxis = d3.axisLeft(graphy)
                         .scale(graphy)
                         //no tick marks
                         .tickSize(0)
@@ -254,6 +244,51 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
                     var gy = graph.append("g")
                         .attr("class", "y axis")
                         .call(yAxis)
+
+
+            
+            // draw bar chart for gender distribution
+            function drawChart(d){
+                // var graph = d3.select("#pieChart")
+                //     .append("svg")
+                //     .attr("width", chartWidth + margin.left + margin.right)
+                //     .attr("height", chartHeight + margin.top + margin.bottom)
+                //     .append("g")
+                //     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                
+                    //X axis adn Y axis
+                    // var graphx = d3.scaleLinear()
+                    //     .range([0, chartWidth])
+                    //     .domain([0, d3.max(gd, function (d) {
+                    //         return d['value'];
+                    //     })]);
+                    // var graphx = d3.scaleBand()
+                    //     .domain(d3.range(gd.length))
+                    //     .rangeRound([0, chartWidth], 0.05)
+                    //     .paddingInner(0.05);
+                    // var graphy = d3.scaleOrdinal()
+                    //     //.rangeRoundBands([chartHeight, 0], .1)
+                    //     .range([0, chartHeight])
+                    //     //.padding(0.1)
+                    //     .domain(gd.map(function (d) {
+                    //         return d['tag'];
+                    //     }));
+
+                    // var graphy =  d3.scaleBand()
+                    //     .domain(d3.range(gd.length))
+                    //     .rangeRound([0, chartWidth], 0.05)
+                    //     .paddingInner(0.05);
+
+                    //make y axis to show bar names
+                    // var yAxis = d3.axisLeft(graphy)
+                    //     .scale(graphy)
+                    //     //no tick marks
+                    //     .tickSize(0)
+                    //     //.orient("left");
+
+                    // var gy = graph.append("g")
+                    //     .attr("class", "y axis")
+                    //     .call(yAxis)
 
                     var bars = graph.selectAll(".bar")
                         .data(gd)
@@ -267,24 +302,24 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
                         return graphy(d['tag']);
                     })
                     //.attr("height", graphy.rangeBand())
-                    .attr("height", graphy.bandwidth())
+                    // .attr("height", graphy.bandwidth())
                     .attr("x", 0)
                     .attr("width", function (d) {
                         return graphx(d['value']);
                     });
 
-                    bars.append("text")
-                        .attr("class", "label")
-                        //y position of the label is halfway down the bar
-                        .attr("y", function (d) {
-                            return graphy(d['tag']) + graphy.bandwidth() / 2 + 4;
-                        })
-                        //x position is 3 pixels to the right of the bar
-                        .attr("x", function (d) {
-                            return graphx(d['value']) + 3;
-                        })
-                        .text(function (d) {
-                            return d['value'];
-                        });
+                    // bars.append("text")
+                    //     .attr("class", "label")
+                    //     //y position of the label is halfway down the bar
+                    //     .attr("y", function (d) {
+                    //         return graphy(d['tag']) + graphy.bandwidth() / 2 + 4;
+                    //     })
+                    //     //x position is 3 pixels to the right of the bar
+                    //     .attr("x", function (d) {
+                    //         return graphx(d['value']) + 3;
+                    //     })
+                    //     .text(function (d) {
+                    //         return d['value'];
+                    //     });
                 }
 });

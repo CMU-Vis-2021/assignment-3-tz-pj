@@ -101,3 +101,7 @@ div.tooltip {
 	stroke: #000;
 	shape-rendering: crispEdges;
 }
+
+.bar{
+  fill:#5f89ad;
+}
