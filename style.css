@@ -86,13 +86,18 @@ div.tooltip {
   pointer-events: none;
 }
 
+#title, #gender{
+  font-family: Arial, sans-serif;
+  font-size: 15px;
+}
+
 text.label{
   font-size: 12px;
   width: 200px;
 }
 
 .legend {
-	padding-top: 100px;
+	padding-top: 60px;
   padding-left: 10px;
   float: left;
 }

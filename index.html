@@ -2,15 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>D3 World Map</title>
+    <title>Who Becomes an Inventor?</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
-    <!-- <script src= "https://d3js.org/d3-color.v1.min.js"></script>  -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tinycolor/1.4.1/tinycolor.js"></script>
-    <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.7.1/d3-tip.min.js"></script>
     <script src="https://d3js.org/topojson.v2.min.js"></script>
 </head>
 <body>
@@ -24,15 +20,8 @@
         <br>Data source: <a href="https://opportunityinsights.org/data/?geographic_level=0&topic=107&paper_id=0#resource-listing">Opportunity Insights</a></p>
         
     <br>
-    <!-- <label for="select">Gender</label> &nbsp
-    <select name="gender" id="gender-select">
-        <option value="all" selected>All</option>
-        <option value="female">Female</option>
-        <option value="male">Male</option>
-    </select> -->
-    <!-- <br><br> -->
     <div id="vis">
-        <span id = "title">&nbsp;</span><br>
+        <div id = "title">&nbsp;</div><br>
         <span id = "gender">&nbsp;</span>
         <br><br>
         <div id = "chart"></div>

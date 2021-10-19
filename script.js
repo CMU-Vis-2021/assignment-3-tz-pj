@@ -109,7 +109,7 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
                 console.log(d);
             graph.transition()
                 .duration(100)
-                .style("opacity", .8);
+                .style("opacity", .9);
         })
 
         .on("mouseout", function (d, i) {
@@ -266,9 +266,10 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
                 .range([0, chartHeight])
                 .domain(label);  //not sure if this is correct
 
-           var y_axis = d3.axisLeft(graphy)
+            var y_axis = d3.axisLeft(graphy)
                 .scale(graphy)
                 .tickSize(0) //no tick
+                //.style("opacity",0)
 
             graph.append("g")
                 .attr("class", "y axis")
