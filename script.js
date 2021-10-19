@@ -117,6 +117,10 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
                 .transition()
                 .duration(200)
                 .style("opacity", 0)
+            d3.select("#chart")
+                .transition()
+                .duration(200)
+                .style("opacity", 0)
         });
 
     svg.selectAll("text")
@@ -192,6 +196,11 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
             .duration(100)
             .style("opacity", 1)
             .text(()=> `Male: ${(d.inventor_percent_m)}%; \n\n Female: ${(d.inventor_percent_f)}%`)
+
+            d3.select("#chart")
+            .transition()
+            .duration(100)
+            .style("opacity", 1)
         }
             
         //gender specific distribution
@@ -211,7 +220,7 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
         var chartWidth = 500 - margin.left - margin.right,
             chartHeight = 100 - margin.top - margin.bottom;
 
-        var graph = d3.select("#pieChart")
+        var graph = d3.select("#chart")
             .append("svg")
             .attr("width", chartWidth + margin.left + margin.right)
             .attr("height", chartHeight + margin.top + margin.bottom)
