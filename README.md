@@ -1,6 +1,8 @@
 Tammy Zhou and Priya Jain
 Data Visualization - Assignment 3 Write-up
 
+https://cmu-vis-2021.github.io/assignment-3-tz-pj/
+
 Question: This data consists of people born between 1980 - 1884 birth cohort. We wanted users to be able to see which states most inventors grew up in. What is the breakdown of female and male inventors by state? 
 
 Design Decisions: 
