@@ -137,9 +137,9 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
                  .remove()
                 .transition()
                 .duration(100)
-            d3.selectAll(".label")
-                 .text("")
-                 .remove()
+            // d3.selectAll(".label")
+            //      .text("")
+            //      .remove()
             d3.select("#chart.svg")
                 .style("opacity", 0)
         //});
@@ -256,19 +256,21 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
             //see this
             var graphx = d3.scaleLinear()
             .range([0, chartWidth])
-            .domain([0, d3.max(data, function (d) {
-                return d.inventor_count;
-            })]);
-            var graphx = d3.scaleLinear()
-                .range([0, chartWidth])
-                // .domain([0, d3.max(data, function (d,i) {
-                //    return (d.inventor_count);
-                // })]);
-                // .domain([0, d3.max()])
+            .domain([0,4000]);
+            //.domain(d3.max(data.inventor_count))
+            // .domain([0, d3.max(data, function (d) {
+            //     return d.inventor_count;
+            // })]);
+            // var graphx = d3.scaleLinear()
+            //     .range([0, chartWidth])
+            //     .domain([0, d3.max(data, function(d){
+            //         return parseInt(d.inventor_count)
+            //     }
+            //         )])
+                //console.log('max:' + )
                 // .domain([0, d3.max(data, function (d)
-                .domain([0,3500]);
+                //.domain([0,4000]);
        
-
 
             //y scale
             var graphy = d3.scaleOrdinal()
@@ -286,8 +288,7 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
         // draw bar chart for gender distribution
         //see this
         function drawChart(d){
-
-
+            graph.selectAll('.bar2').remove()
             graph.selectAll('.bar').remove()
                         
             //draw bar1 - male
@@ -299,7 +300,7 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
             //append rects
             bar1.append("rect")
                 .attr("class", "bar")
-                //.attr("y", d => graphy(label)) 
+                .attr("y", d => graphy(label)) 
                 .attr("height", 25) //height of the bar
                 .attr("x", 5) //x position for the bar
                 .attr("width", function(d) {
@@ -356,6 +357,6 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
                 //         })
                 //         //.attr("width", 10)
                 //         //.attr("font-size", 10)
-                //         .text(gcount.toString())
+                //         .text(gcount)
                 }
 });
