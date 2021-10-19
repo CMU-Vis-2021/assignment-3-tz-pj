@@ -47,6 +47,12 @@ d3.csv("data_aggregation.csv", function(data) {
         return d[percent];
     });
 
+    // let maxCount = d3.max(data, function (d, i) {
+    //     return d['inventor_count'];
+    // });
+    // console.log('max:' + maxCount)
+
+
     //set colors 
     lowColor = '#EBF5FB';
     highColor = '#2874A6';
@@ -87,7 +93,6 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
                 .duration(200)
                 .style("opacity", .9);
 
-
             tooltip.style("left", (d3.event.pageX) + "px")
                 .style("top", (d3.event.pageY) + "px")
                 .text(()=> `${d.state}: ${(d[percent])}%; \n\n Total: ${(d.inventor_count)}`)
@@ -99,9 +104,12 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
                 .style("cursor", "pointer")
                 displayGender(d)
                 drawChart(d)
-                //console.log('d: ')
                 console.log(d);
+            graph.transition()
+                .duration(100)
+                .style("opacity", .8);
         })
+
         .on("mouseout", function (d, i) {
             d3.select(this).style("fill", function (d) {
                 return ramp(d[percent]);
@@ -121,8 +129,21 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
                 .transition()
                 .duration(200)
                 .style("opacity", 0)
+                .style("display", null)
+            d3.selectAll(".bar2")
+                 .attr("width",0)
+                 .remove()
+                .transition()
+                .duration(100)
+            d3.selectAll(".label")
+                 .text("")
+                 .remove()
+            d3.select("#chart.svg")
+                .style("opacity", 0)
+        //});
         });
 
+    //state abbr
     svg.selectAll("text")
         .data(uState.features)
         .enter()
@@ -140,6 +161,7 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
         .attr('font-size','5pt')
         .attr('color','darkgray')
 
+        //legend
         var w = 100, h = 300;
         var key = d3.select("body")
             .append("svg")
@@ -184,6 +206,7 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
             .call(yAxis)
         });
             
+        //display gender distribution
         function displayGender(d){
             d3.select("#title")
             .transition()
@@ -195,7 +218,7 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
             .transition()
             .duration(100)
             .style("opacity", 1)
-            .text(()=> `Male: ${(d.inventor_percent_m)}%; \n\n Female: ${(d.inventor_percent_f)}%`)
+            .text(()=> `Male: ${(d.inventor_count_m)} (${(d.inventor_percent_m)}%); \n\n  Female:  ${(d.inventor_count_f)} (${(d.inventor_percent_f)}%)`)
 
             d3.select("#chart")
             .transition()
@@ -203,90 +226,127 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
             .style("opacity", 1)
         }
             
-        //gender specific distribution
-        // let gd = data.map(function (d) {
-        //     var info =[{'tag': 'Male', 'value' : d.inventor_percent_m}, {'tag':'Female', 'value' : d.inventor_percent_f}];
-        //     return info;
-        // });
-        // //console.log(gd);
-        
+        //bar chart for gender distribution
         var margin = {
-            top: 15,
+            top: 14,
             right: 25,
             bottom: 15,
             left: 60
         };
     
-        var chartWidth = 500 - margin.left - margin.right,
+        var chartWidth = 600 - margin.left - margin.right,
             chartHeight = 100 - margin.top - margin.bottom;
 
-        var graph = d3.select("#chart")
+        const graph = d3.select("#chart")
             .append("svg")
             .attr("width", chartWidth + margin.left + margin.right)
             .attr("height", chartHeight + margin.top + margin.bottom)
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-        // draw bar chart for gender distribution
-        function drawChart(d){
-            //var label = [data.columns[8],data.columns[8]]
-            //var label = [d3.keys(d).slice(12,14)]
+        
+            // var maxCount = d3.max(data, function (d) {
+            //    return (datainventor_count);
+            // });
             var label = ['Male','Female']
-            //var genderRatio = [d.inventor_percent_m,d.inventor_percent_f]
-            console.log('label: ' + label)
 
             //x scale
             var graphx = d3.scaleLinear()
             .range([0, chartWidth])
             .domain([0, d3.max(data, function (d) {
-                return [d.inventor_percent_m];
+                return d.inventor_count;
             })]);
+            var graphx = d3.scaleLinear()
+                .range([0, chartWidth])
+                // .domain([0, d3.max(data, function (d,i) {
+                //    return (d.inventor_count);
+                // })]);
+                .domain([0,3500])
+            console.log('domain: ' + graphx.domain)
 
             //y scale
             var graphy = d3.scaleOrdinal()
-            .range([0, chartHeight])
-            .domain(label);  //not sure if this is correct
+                .range([0, chartHeight])
+                .domain(label);  //not sure if this is correct
 
            var y_axis = d3.axisLeft(graphy)
-            .scale(graphy)
-            .tickSize(0) //no tick
+                .scale(graphy)
+                .tickSize(0) //no tick
 
             graph.append("g")
                 .attr("class", "y axis")
                 .call(y_axis)
+
+        // draw bar chart for gender distribution
+        function drawChart(d){
             
-            //draw bars
-            var bars = graph.selectAll(".bar")
+
+            
+            //draw bar1 - male
+            var bar1 = graph.selectAll(".bar")
                 .data(data)
                 .enter()
                 .append("g") 
 
             //append rects
-            bars.append("rect")
+            bar1.append("rect")
                 .attr("class", "bar")
-                .attr("y", d => graphy(label)) 
+                //.attr("y", d => graphy(label)) 
                 .attr("height", 25) //height of the bar
                 .attr("x", 5) //x position for the bar
-
-                //need help with the following part
                 .attr("width", function(d) {
-                    return graphx(d.inventor_percent_m, d.inventor_percent_f);
+                    return graphx(d.inventor_count_m);
                 });
+                console.log('d.inventor_count_m :' + d.inventor_count_m)
             
-            //append text
-            bars.append("text")
-                    .attr("class", "label")
-                    //align with the center of the bar
-                    .attr("y", function (d) {
-                        return graphy(label) + 17;
-                    })
-                    //50px right to the bar
-                    .attr("x", function (d) {
-                        return graphx([d.inventor_percent_m]) + 50;
-                    })
-                    //.attr("width", 20)
-                    .text(function (d) {
-                        return [d.inventor_percent_m];
-                     });
+            // bar1.append("text")
+            //         .attr("class", "label")
+            //         //align with the center of the bar
+            //         .attr("y", function (d) {
+            //             return graphy(label)+ 17;
+            //         })
+            //         //50px right to the bar
+            //         .attr("x", function (d) {
+            //             return graphx([d.inventor_count_m]) + 30;
+            //         })
+            //         .attr("width", 50)
+            //         .attr("font-size", 10)
+            //         .text(`${(d.inventor_count_m)}`)
+            //         console.log('d.inventor_count_m :' + d.inventor_count_m)
+            
+            //bar 2 - female
+            var bar2 = graph.selectAll(".bar2")
+                    .data(data)
+                    .enter()
+                    .append("g") 
+    
+            var gcount = d.inventor_count_f
+            console.log(gcount)
+                //append rects
+                bar2.append("rect")
+                    .attr("class", "bar")
+                    .attr("y", 50) 
+                    .attr("height", 25) //height of the bar
+                    .attr("x", 5) //x position for the bar
+                    .style("fill","lightpink")
+                    //need help with the following part
+                    .attr("width", function(d) {
+                        return graphx(gcount);
+                    });
+                    console.log('d.inventor_count_f :' + d.inventor_count_f)
+                
+                // //append text
+                // bar2.append("text")
+                //         .attr("class", "label")
+                //         //align with the center of the bar
+                //         .attr("y", function (d) {
+                //             return graphy(label)+ 67;
+                //         })
+                //         //50px right to the bar
+                //         .attr("x", function (d) {
+                //             return graphx([d.inventor_count_f]) + 30;
+                //         })
+                //         //.attr("width", 10)
+                //         //.attr("font-size", 10)
+                //         .text(gcount.toString())
                 }
 });
