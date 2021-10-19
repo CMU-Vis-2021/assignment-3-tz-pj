@@ -132,8 +132,7 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
                 .duration(200)
                 .style("opacity", 0)
                 .style("display", null)
-            d3.selectAll(".bar2")
-                 .attr("width",0)
+            d3.selectAll(".label")
                  .remove()
                 .transition()
                 .duration(100)
@@ -261,16 +260,6 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
             // .domain([0, d3.max(data, function (d) {
             //     return d.inventor_count;
             // })]);
-            // var graphx = d3.scaleLinear()
-            //     .range([0, chartWidth])
-            //     .domain([0, d3.max(data, function(d){
-            //         return parseInt(d.inventor_count)
-            //     }
-            //         )])
-                //console.log('max:' + )
-                // .domain([0, d3.max(data, function (d)
-                //.domain([0,4000]);
-       
 
             //y scale
             var graphy = d3.scaleOrdinal()
@@ -286,7 +275,6 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
                 .call(y_axis)
 
         // draw bar chart for gender distribution
-        //see this
         function drawChart(d){
             graph.selectAll('.bar2').remove()
             graph.selectAll('.bar').remove()
@@ -296,6 +284,8 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
                 .data(data)
                 .enter()
                 .append("g") 
+            
+            var mcount = d.inventor_count_m
 
             //append rects
             bar1.append("rect")
@@ -303,25 +293,24 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
                 .attr("y", d => graphy(label)) 
                 .attr("height", 25) //height of the bar
                 .attr("x", 5) //x position for the bar
-                .attr("width", function(d) {
-                    return graphx(d.inventor_count_m);
-                });
-                console.log('d.inventor_count_m :' + d.inventor_count_m)
+                .attr("width", graphx(mcount))
+                //console.log('mcount :' + mcount)
             
-            // bar1.append("text")
-            //         .attr("class", "label")
-            //         //align with the center of the bar
-            //         .attr("y", function (d) {
-            //             return graphy(label)+ 17;
-            //         })
-            //         //50px right to the bar
-            //         .attr("x", function (d) {
-            //             return graphx([d.inventor_count_m]) + 30;
-            //         })
-            //         .attr("width", 50)
-            //         .attr("font-size", 10)
-            //         .text(`${(d.inventor_count_m)}`)
-            //         console.log('d.inventor_count_m :' + d.inventor_count_m)
+            bar1.append("text")
+                    .attr("class", "label")
+                    //align with the center of the bar
+                    .attr("y", function (d) {
+                        return graphy(label)+ 17;
+                    })
+                    //50px right to the bar
+                    .attr("x", function (d) {
+                        return graphx(mcount) + 30;
+                    })
+                    .attr("width", 50)
+                    .attr("font-size", 10)
+                    .text(mcount)
+
+                    console.log('d.inventor_count_m :' + d.inventor_count_m)
             
             //bar 2 - female
             var bar2 = graph.selectAll(".bar2")
@@ -330,7 +319,7 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
                     .append("g") 
     
             var gcount = d.inventor_count_f
-            console.log(gcount)
+            //console.log(gcount)
                 //append rects
                 bar2.append("rect")
                     .attr("class", "bar")
@@ -345,18 +334,16 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
                     console.log('d.inventor_count_f :' + d.inventor_count_f)
                 
                 // //append text
-                // bar2.append("text")
-                //         .attr("class", "label")
-                //         //align with the center of the bar
-                //         .attr("y", function (d) {
-                //             return graphy(label)+ 67;
-                //         })
-                //         //50px right to the bar
-                //         .attr("x", function (d) {
-                //             return graphx([d.inventor_count_f]) + 30;
-                //         })
-                //         //.attr("width", 10)
-                //         //.attr("font-size", 10)
-                //         .text(gcount)
+                bar2.append("text")
+                        .attr("class", "label")
+                        //align with the center of the bar
+                        .attr("y", function (d) {
+                            return graphy(label)+ 67;
+                        })
+                        //50px right to the bar
+                        .attr("x", graphx(gcount) + 30)
+                        //.attr("width", 10)
+                        //.attr("font-size", 10)
+                        .text(gcount)
                 }
 });
