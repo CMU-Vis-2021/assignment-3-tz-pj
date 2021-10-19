@@ -98,6 +98,8 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
                 .text(()=> `${d.state}: ${(d[percent])}%; \n\n Total: ${(d.inventor_count)}`)
                 
         })
+
+        //see this
         .on("mouseover", function (d) {
             d3.select(this)
                 .style("fill", tinycolor(ramp(d[percent])).darken(25).toString())
@@ -207,6 +209,7 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
         });
             
         //display gender distribution
+        //see this
         function displayGender(d){
             d3.select("#title")
             .transition()
@@ -250,6 +253,7 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
             var label = ['Male','Female']
 
             //x scale
+            //see this
             var graphx = d3.scaleLinear()
             .range([0, chartWidth])
             .domain([0, d3.max(data, function (d) {
@@ -260,8 +264,11 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
                 // .domain([0, d3.max(data, function (d,i) {
                 //    return (d.inventor_count);
                 // })]);
-                .domain([0,3500])
-            console.log('domain: ' + graphx.domain)
+                // .domain([0, d3.max()])
+                // .domain([0, d3.max(data, function (d)
+                .domain([0,3500]);
+       
+
 
             //y scale
             var graphy = d3.scaleOrdinal()
@@ -277,10 +284,12 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
                 .call(y_axis)
 
         // draw bar chart for gender distribution
+        //see this
         function drawChart(d){
-            
 
-            
+
+            graph.selectAll('.bar').remove()
+                        
             //draw bar1 - male
             var bar1 = graph.selectAll(".bar")
                 .data(data)
