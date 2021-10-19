@@ -57,10 +57,10 @@ d3.csv("data_aggregation.csv", function(data) {
     //console.log(max);
     //console.log(min);
 
-    let inventor = data.map(function (d, i) {
-        return d[percent];
-    });
-    console.log(inventor);
+    // let inventor = data.map(function (d, i) {
+    //     return d[percent];
+    // });
+    //console.log(inventor);
  
 d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73cb814ed470/raw/a476b9098ba0244718b496697c5b350460d32f99/us-states.json", function(error, uState) {
     if (error) throw error;
@@ -75,8 +75,7 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
         .enter()
         .append('path')
         .attr("d", path)
-         .style('transition', "all 0.2s ease-in-out")
-
+        .style('transition', "all 0.2s ease-in-out")
         .attr('class', 'state')
         .style("fill", function(d) { 
             return ramp(d[percent]);
@@ -98,9 +97,10 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
             d3.select(this)
                 .style("fill", tinycolor(ramp(d[percent])).darken(25).toString())
                 .style("cursor", "pointer")
-                displayGender(d);
-                drawChart(d);
-
+                displayGender(d)
+                drawChart(d)
+                //console.log('d: ')
+                console.log(d);
         })
         .on("mouseout", function (d, i) {
             d3.select(this).style("fill", function (d) {
@@ -117,10 +117,9 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
                 .transition()
                 .duration(200)
                 .style("opacity", 0)
-           //hideGender;
         });
 
-        svg.selectAll("text")
+    svg.selectAll("text")
         .data(uState.features)
         .enter()
         .append("svg:text")
@@ -137,189 +136,148 @@ d3.json("https://gist.githubusercontent.com/Bradleykingz/3aa5206b6819a3c38b5d73c
         .attr('font-size','5pt')
         .attr('color','darkgray')
 
-            var w = 100, h = 300;
-            var key = d3.select("body")
-                .append("svg")
-                .attr("width", w)
-                .attr("height", h)
-                .attr("class", "legend");
+        var w = 100, h = 300;
+        var key = d3.select("body")
+            .append("svg")
+            .attr("width", w)
+            .attr("height", h)
+            .attr("class", "legend");
+
+        var legend = key.append("defs")
+            .append("svg:linearGradient")
+            .attr("id", "gradient")
+            .attr("x1", "100%")
+            .attr("y1", "0%")
+            .attr("x2", "100%")
+            .attr("y2", "100%")
+            .attr("spreadMethod", "pad");
+
+        legend.append("stop")
+            .attr("offset", "0%")
+            .attr("stop-color", highColor)
+            .attr("stop-opacity", 1);
+            
+        legend.append("stop")
+            .attr("offset", "100%")
+            .attr("stop-color", lowColor)
+            .attr("stop-opacity", 1);
+
+        key.append("rect")
+            .attr("width", w - 75)
+            .attr("height", h)
+            .style("fill", "url(#gradient)")
+            .attr("transform", "translate(0,10)");
+
+        var y = d3.scaleLinear()
+            .range([h, 0])
+            .domain([min, max]);
+
+        var yAxis = d3.axisRight(y);
+
+        key.append("g")
+            .attr("class", "y axis")
+            .attr("transform", "translate(41,10)")
+            .call(yAxis)
+        });
+            
+        function displayGender(d){
+            d3.select("#title")
+            .transition()
+            .duration(100)
+            .style("opacity", 1)
+            .text('Inventor Gender Distribution in ' + `${(d.state)}` + '\n')
+
+            d3.select("#gender")
+            .transition()
+            .duration(100)
+            .style("opacity", 1)
+            .text(()=> `Male: ${(d.inventor_percent_m)}%; \n\n Female: ${(d.inventor_percent_f)}%`)
+        }
+            
+        //gender specific distribution
+        // let gd = data.map(function (d) {
+        //     var info =[{'tag': 'Male', 'value' : d.inventor_percent_m}, {'tag':'Female', 'value' : d.inventor_percent_f}];
+        //     return info;
+        // });
+        // //console.log(gd);
+        
+        var margin = {
+            top: 15,
+            right: 25,
+            bottom: 15,
+            left: 60
+        };
     
-            var legend = key.append("defs")
-                .append("svg:linearGradient")
-                .attr("id", "gradient")
-                .attr("x1", "100%")
-                .attr("y1", "0%")
-                .attr("x2", "100%")
-                .attr("y2", "100%")
-                .attr("spreadMethod", "pad");
-    
-            legend.append("stop")
-                .attr("offset", "0%")
-                .attr("stop-color", highColor)
-                .attr("stop-opacity", 1);
-                
-            legend.append("stop")
-                .attr("offset", "100%")
-                .attr("stop-color", lowColor)
-                .attr("stop-opacity", 1);
-    
-            key.append("rect")
-                .attr("width", w - 75)
-                .attr("height", h)
-                .style("fill", "url(#gradient)")
-                .attr("transform", "translate(0,10)");
-    
-            var y = d3.scaleLinear()
-                .range([h, 0])
-                .domain([min, max]);
-    
-            var yAxis = d3.axisRight(y);
-    
-            key.append("g")
+        var chartWidth = 500 - margin.left - margin.right,
+            chartHeight = 100 - margin.top - margin.bottom;
+
+        var graph = d3.select("#pieChart")
+            .append("svg")
+            .attr("width", chartWidth + margin.left + margin.right)
+            .attr("height", chartHeight + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        // draw bar chart for gender distribution
+        function drawChart(d){
+            //var label = [data.columns[8],data.columns[8]]
+            //var label = [d3.keys(d).slice(12,14)]
+            var label = ['Male','Female']
+            //var genderRatio = [d.inventor_percent_m,d.inventor_percent_f]
+            console.log('label: ' + label)
+
+            //x scale
+            var graphx = d3.scaleLinear()
+            .range([0, chartWidth])
+            .domain([0, d3.max(data, function (d) {
+                return [d.inventor_percent_m];
+            })]);
+
+            //y scale
+            var graphy = d3.scaleOrdinal()
+            .range([0, chartHeight])
+            .domain(label);  //not sure if this is correct
+
+           var y_axis = d3.axisLeft(graphy)
+            .scale(graphy)
+            .tickSize(0) //no tick
+
+            graph.append("g")
                 .attr("class", "y axis")
-                .attr("transform", "translate(41,10)")
-                .call(yAxis)
-            });
+                .call(y_axis)
             
-            function displayGender(d){
-                d3.select("#title")
-                .transition()
-                .duration(100)
-                .style("opacity", 1)
-                .text('Inventor Gender Distribution in ' + `${(d.state)}` + '\n')
+            //draw bars
+            var bars = graph.selectAll(".bar")
+                .data(data)
+                .enter()
+                .append("g") 
 
-                d3.select("#gender")
-                .transition()
-                .duration(100)
-                .style("opacity", 1)
-                .text(()=> `Male: ${(d.inventor_percent_m)}%; \n\n Female: ${(d.inventor_percent_f)}%`)
-            }
+            //append rects
+            bars.append("rect")
+                .attr("class", "bar")
+                .attr("y", d => graphy(label)) 
+                .attr("height", 25) //height of the bar
+                .attr("x", 5) //x position for the bar
+
+                //need help with the following part
+                .attr("width", function(d) {
+                    return graphx(d.inventor_percent_m, d.inventor_percent_f);
+                });
             
-            let gd = data.map(function (d, i) {
-                //return [{'value': d.state, 'male' : d.inventor_percent_m, 'female' : d.inventor_percent_f}];
-                var info =[{'tag': 'Male', 'value' : d.inventor_percent_m}, {'tag':'Female', 'value' : d.inventor_percent_f}];
-                return info;
-            });
-            console.log(gd);
-            
-            var margin = {
-                top: 15,
-                right: 25,
-                bottom: 15,
-                left: 60
-            };
-    
-            var chartWidth = 900 - margin.left - margin.right,
-                chartHeight = 300 - margin.top - margin.bottom;
-
-                var graph = d3.select("#pieChart")
-                .append("svg")
-                .attr("width", chartWidth + margin.left + margin.right)
-                .attr("height", chartHeight + margin.top + margin.bottom)
-                .append("g")
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-                var graphx = d3.scaleLinear()
-                        .range([0, chartWidth])
-                        .domain([0, d3.max(gd, function (d) {
-                            return d['value'];
-                            console.log(d['value']);
-
-                        })]);
-
-                        var graphy = d3.scaleOrdinal()
-                        //.rangeRoundBands([chartHeight, 0], .1)
-                        .range([0, chartHeight])
-                        //.padding(0.1)
-                        .domain(gd.map(function (d) {
-                            return d['tag'];
-                        }));
-
-                        var yAxis = d3.axisLeft(graphy)
-                        .scale(graphy)
-                        //no tick marks
-                        .tickSize(0)
-                        //.orient("left");
-
-                    var gy = graph.append("g")
-                        .attr("class", "y axis")
-                        .call(yAxis)
-
-
-            
-            // draw bar chart for gender distribution
-            function drawChart(d){
-                // var graph = d3.select("#pieChart")
-                //     .append("svg")
-                //     .attr("width", chartWidth + margin.left + margin.right)
-                //     .attr("height", chartHeight + margin.top + margin.bottom)
-                //     .append("g")
-                //     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-                
-                    //X axis adn Y axis
-                    // var graphx = d3.scaleLinear()
-                    //     .range([0, chartWidth])
-                    //     .domain([0, d3.max(gd, function (d) {
-                    //         return d['value'];
-                    //     })]);
-                    // var graphx = d3.scaleBand()
-                    //     .domain(d3.range(gd.length))
-                    //     .rangeRound([0, chartWidth], 0.05)
-                    //     .paddingInner(0.05);
-                    // var graphy = d3.scaleOrdinal()
-                    //     //.rangeRoundBands([chartHeight, 0], .1)
-                    //     .range([0, chartHeight])
-                    //     //.padding(0.1)
-                    //     .domain(gd.map(function (d) {
-                    //         return d['tag'];
-                    //     }));
-
-                    // var graphy =  d3.scaleBand()
-                    //     .domain(d3.range(gd.length))
-                    //     .rangeRound([0, chartWidth], 0.05)
-                    //     .paddingInner(0.05);
-
-                    //make y axis to show bar names
-                    // var yAxis = d3.axisLeft(graphy)
-                    //     .scale(graphy)
-                    //     //no tick marks
-                    //     .tickSize(0)
-                    //     //.orient("left");
-
-                    // var gy = graph.append("g")
-                    //     .attr("class", "y axis")
-                    //     .call(yAxis)
-
-                    var bars = graph.selectAll(".bar")
-                        .data(gd)
-                        .enter()
-                        .append("g")
-
-                    //append rects
-                    bars.append("rect")
-                    .attr("class", "bar")
+            //append text
+            bars.append("text")
+                    .attr("class", "label")
+                    //align with the center of the bar
                     .attr("y", function (d) {
-                        return graphy(d['tag']);
+                        return graphy(label) + 17;
                     })
-                    //.attr("height", graphy.rangeBand())
-                    // .attr("height", graphy.bandwidth())
-                    .attr("x", 0)
-                    .attr("width", function (d) {
-                        return graphx(d['value']);
-                    });
-
-                    // bars.append("text")
-                    //     .attr("class", "label")
-                    //     //y position of the label is halfway down the bar
-                    //     .attr("y", function (d) {
-                    //         return graphy(d['tag']) + graphy.bandwidth() / 2 + 4;
-                    //     })
-                    //     //x position is 3 pixels to the right of the bar
-                    //     .attr("x", function (d) {
-                    //         return graphx(d['value']) + 3;
-                    //     })
-                    //     .text(function (d) {
-                    //         return d['value'];
-                    //     });
+                    //50px right to the bar
+                    .attr("x", function (d) {
+                        return graphx([d.inventor_percent_m]) + 50;
+                    })
+                    //.attr("width", 20)
+                    .text(function (d) {
+                        return [d.inventor_percent_m];
+                     });
                 }
 });

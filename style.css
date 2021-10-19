@@ -86,6 +86,11 @@ div.tooltip {
   pointer-events: none;
 }
 
+text.label{
+  font-size: 12px;
+  width: 20px;
+}
+
 .legend {
 	padding-top: 100px;
   padding-left: 10px;
