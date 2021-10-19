@@ -4,6 +4,7 @@ Data Visualization - Assignment 3 Write-up
 Question: This data consists of people born between 1980 - 1884 birth cohort. We wanted users to be able to see which states most inventors grew up in. What is the breakdown of female and male inventors by state? 
 
 Design Decisions: 
+
 Interactive Choropleth map: We wanted to visualize the data by state. This type of map makes it easy for the user to interact with the data from different states.
 
 Tooltip: The map is color coded with a darker hue representing a state with a higher proportion of inventors. However, the tooltip presents quantitative details on demand.
@@ -13,6 +14,7 @@ Bar chart: For each state, a bar chart appears on hover, detailing the breakdown
 Hover : When you hover over a state, it darkens to communicate which state is selected. This just gives confirmation/feedback to the user and makes it more interactive.
 
 State abbreviations: Added state abbreviations so the map is well labelled and adds more information without requiring the user to hover over the state.
+
 
 Development Process: 
 We split up the work by features of the visualization and also worked together on some of the tougher features of the data visualization. The development process was long and full of challenges. We spent many hours working on a dropdown filter feature that would change and update the choropleth map. However, we ran into challenges with the structure of our data file and the actual implementation of this. Specifically, the update function was not updating the map when the dropdown option was selected. 
