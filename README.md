@@ -1,20 +1,24 @@
-# a3-template
+Tammy Zhou and Priya Jain
+Data Visualization - Assignment 3 Write-up
 
-Template for Assignment 3. It comes pre-loaded with D3 and Vega.
+Question: This data consists of people born between 1980 - 1884 birth cohort. We wanted users to be able to see which states most inventors grew up in. What is the breakdown of female and male inventors by state? 
 
-## Setup
+Design Decisions
+Interactive Choropleth map: We wanted to visualize the data by state. This type of map makes it easy for the user to interact with the data from different states.
 
-This template uses the same setup as the D3 crashcourse template.
+Tooltip: The map is color coded with a darker hue representing a state with a higher proportion of inventors. However, the tooltip presents quantitative details on demand.
 
-To run it, use the following commands:
+Bar chart: For each state, a bar chart appears on hover, detailing the breakdown of male and female inventors. The alternative was a pie chart, but we concluded using a bar chart for the inventor count would better relay the information.
 
-1. Install Node.js and NPM from https://nodejs.org/en/download/.
-2. Clone this repository, and cd into the directory.
-3. Open VSCode and open the folder you just cloned.
-4. In this folder, run `npm i` to install the dependencies.
-5. Open the URL displayed in the terminal (usually http://localhost:3000/). If you open the html file directly, your changes will not update the website.
-6. Run `npm run dev` to watch for changes and host the web application.
+Hover : When you hover over a state, it darkens to communicate which state is selected. This just gives confirmation/feedback to the user and makes it more interactive.
 
-You can add any changes to github using `git add .` and `git commit -m "message"` and `git push origin master`.
+State abbreviations: Added state abbreviations so the map is well labelled and adds more information without requiring the user to hover over the state.
 
-Please email [cabrera@cmu.edu](mailto:cabrera@cmu.edu) if you run into any issues, or come to office hours for debugging.
+Development Process
+We split up the work by features of the visualization and also worked together on some of the tougher features of the data visualization. The development process was long and full of challenges. We spent many hours working on a dropdown filter feature that would change and update the choropleth map. However, we ran into challenges with the structure of our data file and the actual implementation of this. Specifically, the update function was not updating the map when the dropdown option was selected. 
+Due to time constraints, we decided to create a bar graph within the tooltip as the user hovered over each state. Even though this was not changing the choropleth graph, it still was a large investment of time. 
+Initially we wanted to explore how parental income levels impacted the number of inventors per state. As we began working in D3, we realized we underestimated the complexity and time required to bring all our ideas to fruition and settled on other aspects.
+
+
+We both spent roughly 15-20 hours individually, totalling about 40 hours together.
+
